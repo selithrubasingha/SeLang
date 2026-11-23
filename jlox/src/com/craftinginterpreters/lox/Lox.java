@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Lox {
+    static boolean hadError = false;
+
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: jlox [script]");
@@ -23,6 +25,9 @@ public class Lox {
     private static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
+
+        // Indicate the error in the exit code.
+        if (hadError) System.exit(65);
     }
 
     // If no arguments are given, this method runs one line at a time.
@@ -41,6 +46,8 @@ public class Lox {
                 break;
             }
             run(line);
+
+            hadError = false;
         }
     }
 
@@ -48,5 +55,16 @@ public class Lox {
     private static void run(String source) {
         // The scanner and interpreter will process this source in later steps.
         System.out.println(source);
+    }
+
+    static void error(int line, String message) {
+        report(line, "", message);
+    }
+
+    private static void report(int line, String where,
+                               String message) {
+        System.err.println(
+                "[line " + line + "] Error" + where + ": " + message);
+        hadError = true;
     }
 }
