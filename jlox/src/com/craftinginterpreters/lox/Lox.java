@@ -61,6 +61,7 @@ public class Lox {
         report(line, "", message);
     }
 
+    // Reports an error with the given line and location.
     private static void report(int line, String where,
                                String message) {
         System.err.println(

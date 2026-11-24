@@ -7,7 +7,7 @@ public class Token {
     final Object literal;
     final int line;
 
-    // initializing the token class . 
+    // initializing the token class .
     public Token(TokenType type, String lexeme, Object literal, int line) {
         this.type = type;
         this.lexeme = lexeme;

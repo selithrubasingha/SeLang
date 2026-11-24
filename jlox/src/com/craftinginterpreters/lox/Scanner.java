@@ -68,14 +68,36 @@ public class Scanner {
             case '*':
                 addToken(STAR);
                 break;
+            case '!' :
+                    addToken(match('=')
+                    ? TokenType.BANG_EQUAL : TokenType.BANG);
+            case '=' : addToken(match('=')
+                    ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
+            case '<' :addToken(match('=')
+                    ? TokenType.LESS_EQUAL : TokenType.LESS);
+            case '>' : addToken(match('=')
+                    ? TokenType.GREATER_EQUAL : TokenType.GREATER);
+
+
+
+            default:
+                Lox.error(line, "Unexpected character.");
+                break;
 
         }
 
 
     }
 
+    // helper function for the <= , >= ...
+    private boolean match(char expected ){
+        if (isAtEnd() || source.charAt(current) != expected) return false;
+        current++;
+        return true;
+    }
+
     private char advance() {
-        // increments the current and returns the relavent char at the same time ! 
+        // increments the current and returns the relavent char at the same time !
         return source.charAt(current++);
     }
 
