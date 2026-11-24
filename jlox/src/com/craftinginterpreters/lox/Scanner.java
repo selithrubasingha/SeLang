@@ -78,7 +78,7 @@ public class Scanner {
             case '>' : addToken(match('=')
                     ? TokenType.GREATER_EQUAL : TokenType.GREATER);
 
-            // the '/' needs some special handling cause / is division and // is a comment 
+            // the '/' needs some special handling cause / is division and // is a comment
             case '/':
                 if (match('/')) {
                     // A comment goes until the end of the line.
@@ -98,11 +98,35 @@ public class Scanner {
                 line++;
                 break;
 
+            case '"':
+                string();
+                break;
+
             default:
                 Lox.error(line, "Unexpected character.");
                 break;
 
         }
+
+
+    }
+
+    // get every between first " and the last " . which is a string ! 
+    private void string() {
+
+        while (peek() != '"' && !isAtEnd()) {
+            if (peek() == '\n') line++;
+            advance();
+        }
+        if (isAtEnd()) {
+            Lox.error(line, "Unterminated string.");
+            return;
+        }
+        // The closing ".
+        advance();
+        // Trim the surrounding quotes.
+        String value = source.substring(start + 1, current - 1);
+        addToken(STRING, value);
 
 
     }
