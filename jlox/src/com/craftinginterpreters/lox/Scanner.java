@@ -78,7 +78,25 @@ public class Scanner {
             case '>' : addToken(match('=')
                     ? TokenType.GREATER_EQUAL : TokenType.GREATER);
 
+            // the '/' needs some special handling cause / is division and // is a comment 
+            case '/':
+                if (match('/')) {
+                    // A comment goes until the end of the line.
+                    while (peek() != '\n' && !isAtEnd()) advance();
+                } else {
+                    addToken(SLASH);
+                }
+                break;
 
+            // skipping over the meaningless characters . white spaces , tabs and stuff .
+            case ' ':
+            case '\r':
+            case '\t':
+                // Ignore whitespace.
+                break;
+            case '\n':
+                line++;
+                break;
 
             default:
                 Lox.error(line, "Unexpected character.");
@@ -86,6 +104,13 @@ public class Scanner {
 
         }
 
+
+    }
+
+    // LOOKAHEAD  , Used for inspecting the next character without consuming it.
+    private char peek() {
+        if (isAtEnd()) return '\0';
+        return source.charAt(current);
 
     }
 
