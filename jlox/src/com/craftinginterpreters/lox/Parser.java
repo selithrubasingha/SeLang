@@ -44,6 +44,18 @@ public class Parser {
         return expr;
     }
 
+    private Expr term() {
+       Expr expr = factor();
+
+        while (match(MINUS, PLUS)) {
+            Token operator = previous();
+            Expr right = factor();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
     // helper : Consumes the next token if it matches any of the given types.
     private boolean match(TokenType... types){
         for (TokenType type : types) {
