@@ -2,7 +2,7 @@ package com.craftinginterpreters.lox;
 
 import java.util.List;
 
-import static com.craftinginterpreters.lox.TokenType.EOF;
+import static com.craftinginterpreters.lox.TokenType.*;
 
 
 public class Parser {
@@ -25,6 +25,19 @@ public class Parser {
         while (match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
             Token operator = previous();
             Expr right = comparison();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr comparison() {
+        Expr expr = term();
+
+        while (match(GREATER, GREATER_EQUAL,
+                LESS, LESS_EQUAL)) {
+            Token operator = previous();
+            Expr right = term();
             expr = new Expr.Binary(expr, operator, right);
         }
 
