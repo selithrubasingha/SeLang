@@ -19,6 +19,7 @@ public class Parser {
         return equality();
     }
 
+    // Parses == and !=, wrapping comparison expressions in binary expressions.
     private Expr equality() {
         Expr expr = comparison();
 
@@ -31,6 +32,7 @@ public class Parser {
         return expr;
     }
 
+    // Parses <, <=, >, and >=, wrapping term expressions in binary expressions.
     private Expr comparison() {
         Expr expr = term();
 
@@ -44,6 +46,7 @@ public class Parser {
         return expr;
     }
 
+    // Parses + and -, wrapping factor expressions in binary expressions.
     private Expr term() {
        Expr expr = factor();
 
@@ -56,6 +59,7 @@ public class Parser {
         return expr;
     }
 
+    // Parses * and /, wrapping unary expressions in binary expressions.
     private Expr factor() {
        Expr expr = unary();
 
@@ -68,6 +72,7 @@ public class Parser {
         return expr;
     }
 
+    // Parses ! and unary -, wrapping another unary expression or a primary expression.
     private Expr unary() {
 
         if (match(BANG ,MINUS ) ){
@@ -79,6 +84,7 @@ public class Parser {
         return primary(); 
     }
 
+    // Parses literals or parentheses, with grouping wrapping a full expression.
     private Expr primary() {
        if (match(FALSE)) return new Expr.Literal(false);
        if (match(TRUE)) return new Expr.Literal(true);
