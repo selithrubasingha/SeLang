@@ -7,6 +7,8 @@ import static com.craftinginterpreters.lox.TokenType.*;
 
 public class Parser {
 
+    private static class ParseError extends RuntimeException {}
+
     private final List<Token> tokens;
     private int current = 0 ;
 
@@ -14,6 +16,8 @@ public class Parser {
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
+
+
 
     private Expr expression(){
         return equality();
@@ -97,6 +101,40 @@ public class Parser {
            return new Expr.Grouping(expr);
        }
 
+       throw error(peek(), "Expect expression.");
+    }
+
+    private Token consume(TokenType type, String message) {
+       if (check(type)) return advance();
+
+       throw error(peek() , message);
+    }
+
+    private ParseError error(Token token, String message) {
+        Lox.error(token , message);
+        return new ParseError();
+    }
+
+    private void synchronize() {
+        advance();
+
+        while (!isAtEnd()){
+            if (previous().type == SEMICOLON) return;
+
+            switch (peek().type) {
+                case CLASS:
+                case FUN:
+                case VAR:
+                case FOR:
+                case IF:
+                case WHILE:
+                case PRINT:
+                case RETURN:
+                    return;
+                default:
+                    advance();
+            }
+        }
     }
 
     // helper : Consumes the next token if it matches any of the given types.

@@ -61,6 +61,14 @@ public class Lox {
         report(line, "", message);
     }
 
+    static void error(Token token, String message) {
+        if (token.type == TokenType.EOF){
+            report(token.line, " at end", message);
+        } else {
+            report(token.line, " at '" + token.lexeme + "'", message);
+        }
+    }
+
     // Reports an error with the given line and location.
     private static void report(int line, String where,
                                String message) {
