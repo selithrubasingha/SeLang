@@ -56,6 +56,18 @@ public class Parser {
         return expr;
     }
 
+    private Expr factor() {
+       Expr expr = unary();
+
+        while (match(SLASH, STAR)) {
+            Token operator = previous();
+            Expr right = unary();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
     // helper : Consumes the next token if it matches any of the given types.
     private boolean match(TokenType... types){
         for (TokenType type : types) {
