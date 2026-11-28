@@ -74,11 +74,16 @@ public class Intepreter implements Expr.Visitor<Object>{
             case BANG:
                 return !isTruthy(right);
             case MINUS:
-
+                checkNumberOperand(expr.operator , right );
                 return -(double) right;
         }
 
         return null;
+    }
+
+    private void checkNumberOperand(Token operator, Object operand) {
+        if (operand instanceof Double) return;
+        throw new RuntimeError(operator, "Operand must be a number.");
     }
 
     private boolean isTruthy(Object object) {
