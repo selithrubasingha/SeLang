@@ -25,10 +25,30 @@ public class Intepreter implements Expr.Visitor<Object>{
                     return (String)left + (String)right;
                 }
                 break;
-            default:
-                return null;
+            case GREATER:
+                return (double) left > (double) right;
+            case GREATER_EQUAL:
+                return (double) left >= (double) right;
+            case LESS:
+                return (double) left < (double) right;
+            case LESS_EQUAL:
+                return (double) left <= (double) right;
+            case BANG_EQUAL: return !isEqual(left , right);
+            case EQUAL_EQUAL:return isEqual(left , right);
+
         }
+
+        return null;
     }
+
+    private boolean isEqual(Object a , Object b ){
+        if (a==null && b==null) return true;
+        if (a==null ) return false;
+
+        return a.equals(b);
+    }
+
+
 
     @Override
     public Object visitGroupingExpr(Expr.Grouping expr) {
